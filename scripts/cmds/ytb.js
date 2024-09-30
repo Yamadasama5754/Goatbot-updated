@@ -93,7 +93,7 @@ module.exports = {
 				type = "audio";
 				break;
 			case "معلومات":
-			case "بيانات":
+			case "info":
 				type = "info";
 				break;
 			default:
@@ -323,8 +323,6 @@ async function getVideoInfo(id) {
 			'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Safari/537.36'
 		}
 	});
-	const json = JSON.parse(html.match(/var ytInitialPlayerResponse = (.*?});/)[1]);
-	const json2 = JSON.parse(html.match(/var ytInitialData = (.*?});/)[1]);
 	const { title, lengthSeconds, viewCount, videoId, thumbnail, author } = json.videoDetails;
 	let getChapters;
 	try {
