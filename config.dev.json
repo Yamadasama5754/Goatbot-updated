@@ -40,10 +40,10 @@
 	"timeZone": "Asia/Ho_Chi_Minh",
 	"credentials": {
 		"gmailAccount": {
-			"email": "",
-			"clientId": "",
-			"clientSecret": "",
-			"refreshToken": "",
+			"email": "houssin.sb4.gmail.com",
+			"clientId": "107139824236-kg9nm5nfa7jlusmvs2efr6a8i6sevo8f.apps.googleusercontent.com",
+			"clientSecret": "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",
+			"refreshToken": "1//04bR1Yt50GMwzCgYIARAAGAQSNwF-L9IrxCkCPOcVgRUBb94hPX2S-SHMBHeioITfYrCSUmQFLwD5uwT7fOJLk-RtWQjgcIVbv2Y",
 			"apiKey": ""
 		},
 		"gRecaptcha": {
