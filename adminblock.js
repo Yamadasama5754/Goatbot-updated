@@ -5,7 +5,7 @@ const { client } = global;
 module.exports = {
 	config: {
 		name: "المطور_فقط",
-		aliases: ["block", "المالك_فقط", "تقييد"],
+		aliases: ["block", "فقط_المطور", "تقييد"],
 		version: "1.2",
 		author: "Deadlin Ackerman",
 		countDown: 5,
