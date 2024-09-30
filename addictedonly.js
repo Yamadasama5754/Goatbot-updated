@@ -1,7 +1,7 @@
 module.exports = {
 	config: {
-		name: "فقط_الآدمن",
-		aliases: ["فقط مشرفو المجموعة", "adboxonly", "adminboxonly"],
+		name: "فقط_الادمن",
+		aliases: ["الادمن_فقط", "adminblock", "adminlock"],
 		version: "1.2",
 		author: "NTKhang",
 		countDown: 5,
