@@ -1,9 +1,9 @@
 module.exports = {
   config: {
-    name: "إعادة_تشغيل",
-    aliases: ["restart", "إعادة تشغيل", "ريستارت"],
+    name: "اعادة_تشغيل",
+    aliases: ["restart", "رست", "rest"],
     version: "1.1",
-    author: "YourName",
+    author: "yamada",
     countDown: 5,
     role: 2,  // 2 يعني المطور فقط
     shortDescription: {
