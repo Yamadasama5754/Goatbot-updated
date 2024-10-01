@@ -5,7 +5,7 @@ let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت
 
 module.exports = {
     config: {
-        name: "الحظر",
+        name: "حضر",
         version: "1.4",
         author: "NTKhang x Samir Œ",
         countDown: 5,
