@@ -1,7 +1,7 @@
 module.exports = {
   config: {
     name: "معلومات",
-    version: "1.0.1",
+    version: "1.0.2",
     author: "Arjhil",
     longDescription: "الحصول على معلومات المستخدم.",
     shortDescription: "الحصول على معلومات المستخدم.",
@@ -43,7 +43,7 @@ module.exports = {
         📝 الإسم: ${userName}
         🆔 آيدي: ${uid}
         👤 النوع: ${gender}
-        🎂 ناريخ الإزدياد: ${birthday}
+        🎂 تاريخ الإزدياد: ${birthday}
         📊 الحالة: ${userStatus}
         🤝 الأصدقاء: ${areFriends}
         🌐 رابط فيسبوك: ${fbLink}
@@ -69,13 +69,17 @@ module.exports = {
         });
       } catch (error) {
         console.error(error);
-        api.sendMessage("An error occurred while fetching user information.", threadID, messageID);
+        api.sendMessage("حدث خطأ أثناء جلب معلومات المستخدم.", threadID, messageID);
       }
     };
 
     if (!args[0]) {
       // If no UID is provided, use the sender's UID
       getUserInfo(senderID);
+    } else if (event.type === "message_reply") {
+      // If replying to a user's message, get the UID from the replied message
+      const repliedUserID = event.messageReply.senderID;
+      getUserInfo(repliedUserID);
     } else if (args[0].indexOf("@") !== -1) {
       // If the message mentions a user, extract UID from mentions
       const mentionedUID = Object.keys(event.mentions)[0];
@@ -83,7 +87,7 @@ module.exports = {
         getUserInfo(mentionedUID);
       }
     } else {
-      api.sendMessage("استخدام الأمر غير صالح. إستخدم `معلومات_حول_المستخدم` أو `معلومات_حول_المستخدم @منشن`.", threadID, messageID);
+      api.sendMessage("استخدام الأمر غير صالح. إستخدم لمعلوماتك `معلومات` أو للمعلومات باستخدام `معلومات @منشن` أو رد على رسالة شخص `معلومات`.", threadID, messageID);
     }
   },
 };
