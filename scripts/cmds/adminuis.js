@@ -61,7 +61,7 @@ module.exports = {
 		}
 	},
 
-	onStart: async function ({ message, event, args, role, threadsData, getLang }) {
+	onStart: async function ({ message, event, args, role, threadsData, getLang, api }) {
 		const { commands, aliases } = global.GoatBot;
 		const setRole = await threadsData.get(event.threadID, "data.setRole", {});
 
@@ -97,11 +97,13 @@ module.exports = {
 		}
 
 		setRole[commandName] = newRole;
-		if (Default)
-			delete setRole[commandName];
-		await 
-      api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-    threadsData.set(event.threadID, setRole, "data.setRole");
-		message.reply("✅ " + (Default === true ? getLang("resetRole", commandName) : getLang("changedRole", commandName, newRole)));
+		if (Default) delete setRole[commandName];
+
+		// تأكد من تعريف api
+		if (typeof api.setMessageReaction === "function") {
+			await api.setMessageReaction("✅", event.messageID, () => {}, true);
+		}
+		threadsData.set(event.threadID, setRole, "data.setRole");
+		message.reply("✅ " + (Default ? getLang("resetRole", commandName) : getLang("changedRole", commandName, newRole)));
 	}
 };
