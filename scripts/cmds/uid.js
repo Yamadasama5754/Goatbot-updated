@@ -12,35 +12,18 @@ const animeCharacters = [
 module.exports = {
   config: {
     name: "ايدي",
-    version: "1.0",
+    version: "1.1",
     author: "حسين يعقوبي",
     countDown: 60,
     role: 0,
     shortDescription: "الحصول على معلومات المستخدم والصورة",
-    longDescription: "احصل على معلومات المستخدم والصورة من خلال منشن",
+    longDescription: "احصل على معلومات المستخدم والصورة من خلال منشن أو الرد على الرسالة.",
     category: "معلومات",
   },
 
   onStart: async function ({ event, message, usersData, api, args, threadsData }) {
     try {
-      const uid1 = event.senderID;
-      const uid2 = Object.keys(event.mentions)[0];
-      let uid;
-
-      if (args[0]) {
-        if (/^\d+$/.test(args[0])) {
-          uid = args[0];
-        } else {
-          const match = args[0].match(/profile\.php\?id=(\d+)/);
-          if (match) {
-            uid = match[1];
-          }
-        }
-      }
-
-      if (!uid) {
-        uid = event.type === "message_reply" ? event.messageReply.senderID : uid2 || uid1;
-      }
+      const uid = event.type === "message_reply" ? event.messageReply.senderID : event.senderID;
 
       let bankData;
       try {
@@ -52,15 +35,13 @@ module.exports = {
 
       api.getUserInfo(uid, async (err, userInfo) => {
         if (err) {
-          return message.reply("Failed to retrieve user information.");
+          return message.reply("فشل في استرجاع معلومات المستخدم.");
         }
 
         const avatarUrl = await usersData.getAvatarUrl(uid);
         const messageCounts = await getMessageCounts(api, event.threadID);
         const rank = getRank(userInfo[uid].exp, messageCounts[uid]);
-        const balance = bankData[uid]?.bank !== undefined && !isNaN(bankData[uid].bank)
-          ? bankData[uid].bank
-          : 0;
+        const balance = bankData[uid]?.bank !== undefined && !isNaN(bankData[uid].bank) ? bankData[uid].bank : 0;
         const userIndex = animeCharacters.findIndex(character => character === userInfo[uid].name);
         const randomCharacter = animeCharacters[Math.floor(Math.random() * animeCharacters.length)];
 
@@ -74,13 +55,13 @@ module.exports = {
 
         const userInformation = `\t\t•——[معلومات]——•\n\n❏اسمك👤: 『${userInfo[uid].name}』\n❏جنسك♋: 『${genderText}』\n❏تصنيفك🧿: 『${rank}』\n❏البنك💰: 『${balance}💲』\n❏عدد الأعضاء 💐 : 『${memberCount}』\n❏عدد رسائلك 📩: 『${messageCounts[uid] || 0}』\n❏هل هو صديق✅ : 『${userIsFriend}』\n❏هل عيد ميلادك اليوم🎉 : 『${isBirthdayToday}』\n❏العنصر الخاص بك🌟: 『${userIndex !== -1 ? animeCharacters[userIndex] : randomCharacter}』`;
 
-
         message.reply({
           body: userInformation,
           attachment: await global.utils.getStreamFromURL(avatarUrl),
         });
       });
 
+      const members = await threadsData.get(event.threadID, "members") || [];
       const findMember = members.find(user => user.userID == uid);
       if (!findMember) {
         members.push({
@@ -95,14 +76,14 @@ module.exports = {
       }
       await threadsData.set(event.threadID, members, "members");
     } catch (error) {
-      console.error("حدث خطأ أثناء قراءة ملف bank.json:", error.message);
+      console.error("حدث خطأ:", error.message);
     }
   },
 
   onChat: async ({ usersData, threadsData, event }) => {
     try {
       const { senderID, threadID } = event;
-      const members = await threadsData.get(threadID, "members");
+      const members = await threadsData.get(threadID, "members") || [];
 
       if (!members.some(member => member.userID === senderID)) {
         members.push({
@@ -113,7 +94,7 @@ module.exports = {
 
       await threadsData.set(threadID, members, "members");
     } catch (error) {
-      console.error("حدث خطأ أثناء قراءة ملف bank.json:", error.message);
+      console.error("حدث خطأ:", error.message);
     }
   },
 };
