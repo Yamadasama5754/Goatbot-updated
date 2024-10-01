@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const qs = require("qs");
-const { getStreamFromURL, shortenURL, randomString } = global.utils;
+const { shortenURL } = global.utils; // تأكد من أن shortenURL موجود في utils
 
 module.exports = {
   threadStates: {},
@@ -35,7 +35,6 @@ module.exports = {
       const { url } = this.checkLink(event.body);
       console.log(`Attempting to download from URL: ${url}`);
       this.downLoad(url, api, event);
-      api.setMessageReaction("✅", event.messageID, (err) => {}, true);
     }
   },
   downLoad: function (url, api, event) {
@@ -72,6 +71,7 @@ module.exports = {
       }, event.threadID, () => fs.unlinkSync(path), event.messageID);
     } catch (err) {
       console.error(err);
+      api.sendMessage("❌ | حدث خطأ أثناء تحميل الفيديو.", event.threadID, event.messageID);
     }
   },
   downloadFacebook: async function (url, api, event, path) {
@@ -98,10 +98,11 @@ module.exports = {
           }, event.threadID, () => fs.unlinkSync(path), event.messageID);
         });
       } else {
-        api.sendMessage("", event.threadID, event.messageID);
+        api.sendMessage("❌ | لم يتم العثور على فيديو في الرابط.", event.threadID, event.messageID);
       }
     } catch (err) {
       console.error(err);
+      api.sendMessage("❌ | حدث خطأ أثناء تحميل الفيديو.", event.threadID, event.messageID);
     }
   },
   downloadTikTok: async function (url, api, event, path) {
@@ -118,7 +119,7 @@ module.exports = {
       }
 
       const shortUrl = await shortenURL(res);
-      const messageBody = `✅ |  تم تحميل الفيديو : ${shortUrl}`;
+      const messageBody = `✅ |  تم تحميل الفيديو 🔗 : ${shortUrl}`;
 
       api.sendMessage({
         body: messageBody,
@@ -126,6 +127,7 @@ module.exports = {
       }, event.threadID, () => fs.unlinkSync(path), event.messageID);
     } catch (err) {
       console.error(err);
+      api.sendMessage("❌ | حدث خطأ أثناء تحميل الفيديو.", event.threadID, event.messageID);
     }
   },
   getLink: function (url, api, event, path) {
@@ -225,76 +227,4 @@ module.exports = {
       };
     }
 
-    const fbWatchRegex = /fb\.watch\/[a-zA-Z0-9_-]+/i;
-    if (fbWatchRegex.test(url)) {
-      return {
-        url: url
-      };
-    }
-
-    return null;
-  }
-};
-
-async function fbDownloader(url) {
-  try {
-    const response1 = await axios({
-      method: 'POST',
-      url: 'https://snapsave.app/action.php?lang=vn',
-      headers: {
-        "accept": "*/*",
-        "accept-language": "vi,en-US;q=0.9,en;q=0.8",
-        "content-type": "multipart/form-data",
-        "sec-ch-ua": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Microsoft Edge\";v=\"110\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
-        "Referer": "https://snapsave.app/vn",
-        "Referrer-Policy": "strict-origin-when-cross-origin"
-      },
-      data: {
-        url
-      }
-    });
-
-    console.log('Facebook Downloader Response:', response1.data);
-
-    let html;
-    const evalCode = response1.data.replace('return decodeURIComponent', 'html = decodeURIComponent');
-    eval(evalCode);
-    html = html.split('innerHTML = "')[1].split('";\n')[0].replace(/\\"/g, '"');
-
-    const $ = cheerio.load(html);
-    const download = [];
-
-    const tbody = $('table').find('tbody');
-    const trs = tbody.find('tr');
-
-    trs.each(function (i, elem) {
-      const trElement = $(elem);
-      const tds = trElement.children();
-      const quality = $(tds[0]).text().trim();
-      const url = $(tds[2]).children('a').attr('href');
-      if (url != undefined) {
-        download.push({
-          quality,
-          url
-        });
-      }
-    });
-
-    return {
-      success: true,
-      video_length: $("div.clearfix > p").text().trim(),
-      download
-    };
-  } catch (err) {
-    console.error('Error in Facebook Downloader:', err);
-    return {
-      success: false
-    };
-  }
-}
-
+    const fbWatchRegex = /fb\.watch\/[a-zA
