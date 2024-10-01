@@ -1,71 +1,52 @@
 module.exports = {
-    config: {
-        name: "الدور",
-        version: "1.0",
-        author: "YourName",
-        countDown: 5,
-        role: 2,
-        shortDescription: "تغيير دور الأمر",
-        longDescription: "قم بتغيير دور الوصول إلى الأوامر إلى الأعضاء، الأدمن أو المطورين",
-        category: "إدارة",
-        guide: "الدور [اسم الأمر] [0/1/2/الأصل]"
-    },
+  config: {
+    name: "دور",
+    version: "1.0",
+    author: "YourName",
+    countDown: 5,
+    role: 0, // يمكن تغييره حسب الحاجة
+    shortDescription: "تعديل دور الأعضاء",
+    longDescription: "يمكنك تغيير دور الأعضاء إلى 0 للأعضاء، 1 للإداريين، 2 للمطورين.",
+    category: "إدارة",
+    guide: "{pn} <اسم الأمر> <0|1|2> لتغيير الدور أو {pn} <اسم الأمر> الأصل لإعادته للدور الأصلي."
+  },
 
-    onStart: async function ({ args, event, message, commands, getLang, threadsData }) {
-        try {
-            // تحقق من وجود المدخلات المطلوبة
-            if (args.length < 2) {
-                return message.reply("⚠️ | يرجى تحديد اسم الأمر والدور.");
-            }
+  onStart: async function ({ args, message, usersData }) {
+    try {
+      const commandName = args[0];
+      const newRole = args[1];
 
-            const commandName = args[0];
-            const newRole = args[1];
+      // التحقق من وجود الاسم والأمر
+      if (!commandName) {
+        return message.reply("⚠️ | يرجى تحديد اسم الأمر.");
+      }
 
-            // تحقق مما إذا كان الأمر موجودًا
-            const command = commands.get(commandName);
-            if (!command) {
-                return message.reply(`❌ | الأمر "${commandName}" غير موجود.`);
-            }
+      // التحقق من وجود الدور الجديد
+      if (newRole === undefined || (newRole !== "0" && newRole !== "1" && newRole !== "2" && newRole !== "الأصل")) {
+        return message.reply("⚠️ | يرجى تحديد دور صحيح (0 للأعضاء، 1 للإداريين، 2 للمطورين، أو 'الأصل' لإعادته للدور الأصلي).");
+      }
 
-            // تأكد من أن الدور صالح (0 للأعضاء، 1 للأدمن، 2 للمطور)
-            const validRoles = ["0", "1", "2", "الأصل"];
-            if (!validRoles.includes(newRole)) {
-                return message.reply("⚠️ | يرجى اختيار دور صحيح (0: الأعضاء، 1: الأدمن، 2: المطور، أو الأصل).");
-            }
+      // الحصول على بيانات المستخدم
+      const userRoleData = await usersData.get(commandName);
+      if (!userRoleData) {
+        return message.reply("⚠️ | الأمر غير موجود.");
+      }
 
-            // إذا كان الدور "الأصل"، إعادة الدور إلى الدور الأصلي المخزن في config
-            if (newRole === "الأصل") {
-                command.config.role = command.config.originalRole || 0;
-                return message.reply(`🔄 | تم إعادة الدور الأصلي للأمر "${commandName}".`);
-            }
+      if (newRole === "الأصل") {
+        // إعادة تعيين الدور إلى الأصلي
+        userRoleData.role = 0; // أو القيمة الأصلية التي تريدها
+        message.reply(`✅ | تم إعادة الدور للأمر "${commandName}" إلى الدور الأصلي.`);
+      } else {
+        userRoleData.role = parseInt(newRole); // تعيين الدور الجديد
+        message.reply(`✅ | تم تعديل دور الأمر "${commandName}" إلى ${newRole === "0" ? "الأعضاء" : newRole === "1" ? "الإداريين" : "المطورين"}.`);
+      }
 
-            // تعديل الدور
-            if (!command.config.originalRole) {
-                // حفظ الدور الأصلي إن لم يكن محفوظًا
-                command.config.originalRole = command.config.role;
-            }
+      // تحديث البيانات
+      await usersData.set(commandName, userRoleData);
 
-            // تعيين الدور الجديد
-            command.config.role = parseInt(newRole);
-
-            let roleText = "";
-            switch (newRole) {
-                case "0":
-                    roleText = "الأعضاء";
-                    break;
-                case "1":
-                    roleText = "الأدمن";
-                    break;
-                case "2":
-                    roleText = "المطور";
-                    break;
-            }
-
-            return message.reply(`✅ | تم تعديل دور الأمر "${commandName}" إلى ${roleText}.`);
-
-        } catch (error) {
-            console.error("Error in command 'الدور':", error);
-            return message.reply("❌ | حدث خطأ أثناء محاولة تغيير الدور.");
-        }
+    } catch (error) {
+      console.error("حدث خطأ:", error.message);
+      message.reply("❌ | حدث خطأ أثناء تنفيذ الأمر. يرجى المحاولة مرة أخرى.");
     }
+  }
 };
