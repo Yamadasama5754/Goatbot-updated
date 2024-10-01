@@ -1,7 +1,7 @@
 module.exports = {
   config: {
-    name: "إعادة_تشغيل",
-    aliases: ["restart", "إعادة تشغيل", "ريستارت"],
+    name: "اعادة_تشغيل",
+    aliases: ["restart","رستارت", "رست"],
     version: "1.1",
     author: "YourName",
     countDown: 5,
@@ -37,24 +37,20 @@ module.exports = {
       // خطوة 2: إعادة تشغيل البوت
       process.exit(1);  // هذا الأمر يقوم بإيقاف العملية الحالية وإعادة تشغيل البوت.
 
-      // بعد إعادة التشغيل
-      const endTime = Date.now();  
-      const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // احتساب الوقت المستغرق بالثواني
-
-      // استخدم هذا الكود لإرسال رسالة من البوت بعد بدء التشغيل
-      api.sendMessage(getLang("success").replace("{time}", timeTaken), message.threadID);
-
+      // سيتم تجاهل الكود أدناه لأن العملية ستخرج
     } catch (e) {
       message.reply(getLang("error"));
     }
   }
 };
 
-// هذا الجزء يجب أن يكون في نقطة البدء للبوت لضمان بدء الرسالة بعد إعادة التشغيل
-const onBotStart = async (api, event) => {
-  // يمكن استخدام هذا الكود لإرسال رسالة من البوت بعد بدء التشغيل
-  api.sendMessage(`✅ | تم إعادة تشغيل البوت بنجاح!`, event.threadID);
+// يجب أن يتم استدعاء هذا الجزء بعد أن يتم بدء تشغيل البوت
+const onBotStart = async (api, threadID) => {
+  const endTime = Date.now();
+  const timeTaken = 1; // وقت ثابت هنا بسبب قلة الدقة
+
+  // إرسال رسالة من البوت بعد بدء التشغيل
+  api.sendMessage(`✅ | تم إعادة تشغيل البوت بنجاح!`, threadID);
 };
 
-// استدعاء الدالة لبدء البوت
-onBotStart(api, event);
+// تأكد من استدعاء دالة onBotStart بعد بدء التشغيل الفعلي للبوت
