@@ -26,26 +26,35 @@ module.exports = {
     }
   },
 
-  onStart: async function ({ message, getLang, api, event }) {
+  onStart: async function ({ message, getLang }) {
     try {
       // خطوة 1: إخبار المستخدم أن البوت سيتم إعادة تشغيله
       await message.reply(getLang("restarting"));
-      
+
       // تسجيل الوقت الحالي (قبل إعادة التشغيل)
-      const startTime = Date.now();
+      const startTime = Date.now(); // تخزين الوقت في المتغير
 
       // خطوة 2: إعادة تشغيل البوت
       process.exit(1);  // هذا الأمر يقوم بإيقاف العملية الحالية وإعادة تشغيل البوت.
 
-      // تسجيل الوقت بعد إعادة التشغيل (لإرسال الوقت المستغرق)
-      const endTime = Date.now();
+      // بعد إعادة التشغيل
+      const endTime = Date.now();  
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // احتساب الوقت المستغرق بالثواني
 
-      // إرسال رسالة بعد إعادة التشغيل (الوقت المستغرق)
-      api.sendMessage(getLang("success").replace("{time}", timeTaken), event.threadID);
-      
+      // استخدم هذا الكود لإرسال رسالة من البوت بعد بدء التشغيل
+      api.sendMessage(getLang("success").replace("{time}", timeTaken), message.threadID);
+
     } catch (e) {
       message.reply(getLang("error"));
     }
   }
 };
+
+// هذا الجزء يجب أن يكون في نقطة البدء للبوت لضمان بدء الرسالة بعد إعادة التشغيل
+const onBotStart = async (api, event) => {
+  // يمكن استخدام هذا الكود لإرسال رسالة من البوت بعد بدء التشغيل
+  api.sendMessage(`✅ | تم إعادة تشغيل البوت بنجاح!`, event.threadID);
+};
+
+// استدعاء الدالة لبدء البوت
+onBotStart(api, event);
