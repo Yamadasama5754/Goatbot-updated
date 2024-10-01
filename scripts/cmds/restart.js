@@ -1,7 +1,7 @@
 module.exports = {
   config: {
-    name: "اعادة_تشغيل",
-    aliases: ["restart", "rest", "رست"],
+    name: "إعادة_تشغيل",
+    aliases: ["restart", "إعادة تشغيل", "ريستارت"],
     version: "1.1",
     author: "YourName",
     countDown: 5,
@@ -26,31 +26,26 @@ module.exports = {
     }
   },
 
-  onStart: async function ({ message, getLang }) {
+  onStart: async function ({ message, getLang, api, event }) {
     try {
       // خطوة 1: إخبار المستخدم أن البوت سيتم إعادة تشغيله
       await message.reply(getLang("restarting"));
-
+      
       // تسجيل الوقت الحالي (قبل إعادة التشغيل)
-      const startTime = Date.now(); // تخزين الوقت في المتغير
+      const startTime = Date.now();
 
       // خطوة 2: إعادة تشغيل البوت
       process.exit(1);  // هذا الأمر يقوم بإيقاف العملية الحالية وإعادة تشغيل البوت.
 
-      // سيتم تجاهل الكود أدناه لأن العملية ستخرج
+      // تسجيل الوقت بعد إعادة التشغيل (لإرسال الوقت المستغرق)
+      const endTime = Date.now();
+      const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // احتساب الوقت المستغرق بالثواني
+
+      // إرسال رسالة بعد إعادة التشغيل (الوقت المستغرق)
+      api.sendMessage(getLang("success").replace("{time}", timeTaken), event.threadID);
+      
     } catch (e) {
       message.reply(getLang("error"));
     }
   }
 };
-
-// يجب أن يتم استدعاء هذا الجزء بعد أن يتم بدء تشغيل البوت
-const onBotStart = async (api, threadID) => {
-  const endTime = Date.now();
-  const timeTaken = 1; // وقت ثابت هنا بسبب قلة الدقة
-
-  // إرسال رسالة من البوت بعد بدء التشغيل
-  api.sendMessage(`✅ | تم إعادة تشغيل البوت بنجاح!`, threadID);
-};
-
-// تأكد من استدعاء دالة onBotStart بعد بدء التشغيل الفعلي للبوت
