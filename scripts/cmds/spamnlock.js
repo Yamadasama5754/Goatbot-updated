@@ -38,13 +38,13 @@ module.exports = {
             {
                 command: "إضافة",
                 description: {
-                    en: "إضافة كلمة نابية"
+                    en: "إضافة كلمات نابية"
                 }
             },
             {
                 command: "إزالة",
                 description: {
-                    en: "إزالة كلمة نابية"
+                    en: "إزالة كلمات نابية"
                 }
             },
             {
@@ -72,22 +72,37 @@ module.exports = {
                 break;
 
             case "إضافة": {
-                const wordToAdd = args[1];
-                if (!wordToAdd) return message.reply("⚠️ | يرجى تحديد الكلمة التي تريد إضافتها.");
-                sensitiveWords.push(wordToAdd.toLowerCase());
-                message.reply(`✅ | تم إضافة الكلمة "${wordToAdd}" إلى القائمة.`);
+                const wordsToAdd = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
+                if (!wordsToAdd) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إضافتها.");
+
+                const wordsArray = wordsToAdd.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
+                wordsArray.forEach(word => {
+                    if (!sensitiveWords.includes(word.toLowerCase())) {
+                        sensitiveWords.push(word.toLowerCase());
+                    }
+                });
+                message.reply(`✅ | تم إضافة الكلمات: "${wordsArray.join(', ')}" إلى القائمة.`);
                 break;
             }
 
             case "إزالة": {
-                const wordToRemove = args[1];
-                if (!wordToRemove) return message.reply("⚠️ | يرجى تحديد الكلمة التي تريد إزالتها.");
-                const index = sensitiveWords.indexOf(wordToRemove.toLowerCase());
-                if (index > -1) {
-                    sensitiveWords.splice(index, 1);
-                    message.reply(`✅ | تم إزالة الكلمة "${wordToRemove}" من القائمة.`);
+                const wordsToRemove = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
+                if (!wordsToRemove) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إزالتها.");
+
+                const wordsArray = wordsToRemove.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
+                let removedWords = [];
+                wordsArray.forEach(word => {
+                    const index = sensitiveWords.indexOf(word.toLowerCase());
+                    if (index > -1) {
+                        sensitiveWords.splice(index, 1);
+                        removedWords.push(word);
+                    }
+                });
+
+                if (removedWords.length > 0) {
+                    message.reply(`✅ | تم إزالة الكلمات: "${removedWords.join(', ')}" من القائمة.`);
                 } else {
-                    message.reply(`❌ | الكلمة "${wordToRemove}" غير موجودة في القائمة.`);
+                    message.reply(`❌ | لم يتم العثور على أي كلمات في القائمة.`);
                 }
                 break;
             }
