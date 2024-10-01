@@ -1,81 +1,71 @@
-let commandsRole = {}; // تخزين دور كل أمر
-
 module.exports = {
     config: {
         name: "الدور",
         version: "1.0",
-        author: "yamada",
+        author: "YourName",
         countDown: 5,
-        role: 2,  // 2 للمطورين
-        shortDescription: {
-            en: "تعديل دور الأوامر"
-        },
-        longDescription: {
-            en: "هذا الأمر يسمح لك بتغيير دور أمر معين (عضو، أدمن، أو مطور) أو إعادته إلى حالته الأصلية"
-        },
-        category: "الإدارة",
-        guide: {
-            en: "الأوامر:\n- {pn} [اسم_الأمر] [0/1/2]: لتغيير الدور.\n- {pn} [اسم_الأمر] الأصل: لإعادة الدور للحالة الأصلية."
-        }
+        role: 2,
+        shortDescription: "تغيير دور الأمر",
+        longDescription: "قم بتغيير دور الوصول إلى الأوامر إلى الأعضاء، الأدمن أو المطورين",
+        category: "إدارة",
+        guide: "الدور [اسم الأمر] [0/1/2/الأصل]"
     },
 
-    langs: {
-        en: {
-            roleUpdated: "✅ | تم تعديل دور الأمر '{commandName}' إلى {roleName}.",
-            roleReset: "🔄 | تم إعادة الأمر '{commandName}' إلى دوره الأصلي.",
-            nonChangeable: "❌ | الأمر '{commandName}' غير قابل لتغيير دوره.",
-            commandNotFound: "❌ | الأمر '{commandName}' غير موجود.",
-            invalidRole: "⚠️ | يرجى اختيار دور صحيح: 0 (للأعضاء)، 1 (لأدمن الكروب)، أو 2 (للمطورين).",
-            missingArgs: "⚠️ | يرجى تحديد اسم الأمر والدور الذي تريد تغييره."
-        }
-    },
-
-    onStart: async function ({ args, message, getLang, commands }) {
-        const commandName = args[0]; // اسم الأمر
-        const roleType = args[1]; // الدور: 0، 1، 2، أو "الأصل"
-
-        if (!commandName || !roleType) {
-            return message.reply(getLang("missingArgs"));
-        }
-
-        const command = commands.get(commandName); // الحصول على تفاصيل الأمر
-        if (!command) {
-            return message.reply(getLang("commandNotFound").replace("{commandName}", commandName));
-        }
-
-        // التأكد مما إذا كان يمكن تغيير دور الأمر
-        if (command.config.role === "غير قابل للتغيير") {
-            return message.reply(getLang("nonChangeable").replace("{commandName}", commandName));
-        }
-
-        if (roleType === "الأصل") {
-            if (commandsRole[commandName]) {
-                delete commandsRole[commandName]; // حذف التعديل وإعادة الأمر لدوره الأصلي
-                command.config.role = command.config.originalRole; // إرجاع الدور الأصلي
-                return message.reply(getLang("roleReset").replace("{commandName}", commandName));
+    onStart: async function ({ args, event, message, commands, getLang, threadsData }) {
+        try {
+            // تحقق من وجود المدخلات المطلوبة
+            if (args.length < 2) {
+                return message.reply("⚠️ | يرجى تحديد اسم الأمر والدور.");
             }
-        } else {
-            let newRole;
-            switch (roleType) {
+
+            const commandName = args[0];
+            const newRole = args[1];
+
+            // تحقق مما إذا كان الأمر موجودًا
+            const command = commands.get(commandName);
+            if (!command) {
+                return message.reply(`❌ | الأمر "${commandName}" غير موجود.`);
+            }
+
+            // تأكد من أن الدور صالح (0 للأعضاء، 1 للأدمن، 2 للمطور)
+            const validRoles = ["0", "1", "2", "الأصل"];
+            if (!validRoles.includes(newRole)) {
+                return message.reply("⚠️ | يرجى اختيار دور صحيح (0: الأعضاء، 1: الأدمن، 2: المطور، أو الأصل).");
+            }
+
+            // إذا كان الدور "الأصل"، إعادة الدور إلى الدور الأصلي المخزن في config
+            if (newRole === "الأصل") {
+                command.config.role = command.config.originalRole || 0;
+                return message.reply(`🔄 | تم إعادة الدور الأصلي للأمر "${commandName}".`);
+            }
+
+            // تعديل الدور
+            if (!command.config.originalRole) {
+                // حفظ الدور الأصلي إن لم يكن محفوظًا
+                command.config.originalRole = command.config.role;
+            }
+
+            // تعيين الدور الجديد
+            command.config.role = parseInt(newRole);
+
+            let roleText = "";
+            switch (newRole) {
                 case "0":
-                    newRole = 0; // للأعضاء
+                    roleText = "الأعضاء";
                     break;
                 case "1":
-                    newRole = 1; // لأدمن الكروب
+                    roleText = "الأدمن";
                     break;
                 case "2":
-                    newRole = 2; // للمطورين
+                    roleText = "المطور";
                     break;
-                default:
-                    return message.reply(getLang("invalidRole"));
             }
 
-            commandsRole[commandName] = newRole; // تخزين الدور الجديد
-            command.config.role = newRole; // تعديل دور الأمر
-            const roleNames = ["الأعضاء", "أدمن الكروب", "المطورين"];
-            return message.reply(getLang("roleUpdated")
-                .replace("{commandName}", commandName)
-                .replace("{roleName}", roleNames[newRole]));
+            return message.reply(`✅ | تم تعديل دور الأمر "${commandName}" إلى ${roleText}.`);
+
+        } catch (error) {
+            console.error("Error in command 'الدور':", error);
+            return message.reply("❌ | حدث خطأ أثناء محاولة تغيير الدور.");
         }
     }
 };
