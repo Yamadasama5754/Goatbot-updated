@@ -1,52 +1,73 @@
+let roles = {
+    admin: "admin",  // دور المشرف
+    member: "member", // دور الأعضاء
+    developer: "developer" // دور المطور
+};
+
+let defaultRole = roles.member; // الدور الافتراضي
+
 module.exports = {
-  config: {
-    name: "دور",
-    version: "1.0",
-    author: "YourName",
-    countDown: 5,
-    role: 0, // يمكن تغييره حسب الحاجة
-    shortDescription: "تعديل دور الأعضاء",
-    longDescription: "يمكنك تغيير دور الأعضاء إلى 0 للأعضاء، 1 للإداريين، 2 للمطورين.",
-    category: "إدارة",
-    guide: "{pn} <اسم الأمر> <0|1|2> لتغيير الدور أو {pn} <اسم الأمر> الأصل لإعادته للدور الأصلي."
-  },
+    config: {
+        name: "الدور",
+        version: "1.0",
+        author: "YourName",
+        countDown: 5,
+        role: 2, // 2 يعني المطور فقط
+        shortDescription: {
+            en: "تغيير الدور",
+        },
+        longDescription: {
+            en: "استخدم الأمر لتغيير دور المستخدمين.",
+        },
+        category: "الإدارة",
+        guide: {
+            en: "{pn} [اسم الأمر] [0|1|2]: لتغيير دور الأمر.\n{pn} [اسم الأمر] reset: لإعادة الأمر للدور الافتراضي."
+        }
+    },
 
-  onStart: async function ({ args, message, usersData }) {
-    try {
-      const commandName = args[0];
-      const newRole = args[1];
+    onStart: async function ({ args, message, getLang }) {
+        const commandName = args[0];
+        const newRole = args[1];
 
-      // التحقق من وجود الاسم والأمر
-      if (!commandName) {
-        return message.reply("⚠️ | يرجى تحديد اسم الأمر.");
-      }
+        try {
+            if (!commandName) {
+                return message.reply("⚠️ | يرجى تحديد اسم الأمر.");
+            }
 
-      // التحقق من وجود الدور الجديد
-      if (newRole === undefined || (newRole !== "0" && newRole !== "1" && newRole !== "2" && newRole !== "الأصل")) {
-        return message.reply("⚠️ | يرجى تحديد دور صحيح (0 للأعضاء، 1 للإداريين، 2 للمطورين، أو 'الأصل' لإعادته للدور الأصلي).");
-      }
+            if (newRole === "reset") {
+                // إعادة الأمر للدور الافتراضي
+                message.reply(`✅ | تم إعادة الدور للأمر "${commandName}" إلى الدور الافتراضي.`);
+                // هنا يمكنك إضافة الكود لإعادة تعيين الدور في حال كان لديك تخزين للدور
+                return;
+            }
 
-      // الحصول على بيانات المستخدم
-      const userRoleData = await usersData.get(commandName);
-      if (!userRoleData) {
-        return message.reply("⚠️ | الأمر غير موجود.");
-      }
+            const roleNumber = parseInt(newRole, 10);
 
-      if (newRole === "الأصل") {
-        // إعادة تعيين الدور إلى الأصلي
-        userRoleData.role = 0; // أو القيمة الأصلية التي تريدها
-        message.reply(`✅ | تم إعادة الدور للأمر "${commandName}" إلى الدور الأصلي.`);
-      } else {
-        userRoleData.role = parseInt(newRole); // تعيين الدور الجديد
-        message.reply(`✅ | تم تعديل دور الأمر "${commandName}" إلى ${newRole === "0" ? "الأعضاء" : newRole === "1" ? "الإداريين" : "المطورين"}.`);
-      }
+            // التحقق من قيمة الدور الجديدة
+            if (![0, 1, 2].includes(roleNumber)) {
+                return message.reply("⚠️ | الدور غير صحيح. استخدم 0 للأعضاء، 1 للمشرفين، 2 للمطورين.");
+            }
 
-      // تحديث البيانات
-      await usersData.set(commandName, userRoleData);
+            let roleMessage;
 
-    } catch (error) {
-      console.error("حدث خطأ:", error.message);
-      message.reply("❌ | حدث خطأ أثناء تنفيذ الأمر. يرجى المحاولة مرة أخرى.");
+            switch (roleNumber) {
+                case 0:
+                    roleMessage = "الأعضاء";
+                    break;
+                case 1:
+                    roleMessage = "المشرفين";
+                    break;
+                case 2:
+                    roleMessage = "المطورين";
+                    break;
+            }
+
+            message.reply(`✅ | تم تعديل الدور للأمر "${commandName}" إلى ${roleMessage}.`);
+            // هنا يمكنك إضافة الكود لتحديث الدور في حال كان لديك تخزين للدور
+
+        } catch (error) {
+            console.error("حدث خطأ أثناء تنفيذ الأمر:", error);
+            message.reply("❌ | حدث خطأ أثناء تنفيذ الأمر. يرجى المحاولة مرة أخرى.");
+        }
     }
-  }
 };
