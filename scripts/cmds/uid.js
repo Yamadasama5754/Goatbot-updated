@@ -15,17 +15,22 @@ module.exports = {
     const getUserInfo = async (targetID) => {
       try {
         const userInfo = await api.getUserInfo(targetID);
-
         const userName = userInfo[targetID].name || "الاسم غير متوفر";
         const uid = targetID;
         const gender = userInfo[targetID].gender || "الجنس غير متوفر";
         const birthday = userInfo[targetID].birthday || "عيد ميلاد غير متوفر";
 
+        // Construct Facebook profile link
         const fbLink = `https://www.facebook.com/profile.php?id=${uid}`;
+
+        // Get profile picture URL
         const profilePicURL = userInfo[targetID].profileUrl || "";
+
+        // Get user status (online, offline, idle)
         const userStatus = userInfo[targetID].isOnline ? "متصل 🟢" : "غير متصل 🔴";
+
+        // Check friendship status (friends or not)
         const areFriends = userInfo[targetID].isFriend ? "نعم ✅" : "لا ❌";
-        const socialMediaLinks = userInfo[targetID].socialMediaLinks || "هذا المستخدم ليس لديه أي حسابات للتواصل الإجتماعي على فيسبوك";
 
         const userInfoMessage = `
         🌟 معلومات المستخدم 🌟
@@ -39,15 +44,15 @@ module.exports = {
         🌐 رابط فيسبوك: ${fbLink}
 
         🖼 صورة البروفايل: ${profilePicURL}
-
-        🔗 روابط وسائل التواصل الاجتماعي الإضافية:
-        ${socialMediaLinks}
         `;
 
         api.sendMessage(userInfoMessage, threadID, (error, info) => {
           if (!error) {
             api.sendTypingIndicator(threadID);
+
+            // Add a delay to simulate typing
             setTimeout(() => {
+              // Add emoji reactions to the message
               api.setMessageReaction("❤", info.messageID);
               api.setMessageReaction("😊", info.messageID);
               api.setMessageReaction("👍", info.messageID);
@@ -60,13 +65,15 @@ module.exports = {
       }
     };
 
-    if (event.type === "message_reply") {
-      // إذا كان هناك رد على رسالة
-      const repliedUID = event.messageReply.senderID;
-      getUserInfo(repliedUID);
+    if (event.messageReply) {
+      // إذا كان المستخدم قد رد على رسالة شخص آخر
+      const repliedUserID = event.messageReply.senderID;
+      getUserInfo(repliedUserID);
+    } else if (!args[0]) {
+      // إذا لم يتم تقديم UID، استخدم UID للمرسل
+      getUserInfo(senderID);
     } else {
-      // إذا لم يكن هناك رد
-      api.sendMessage("استخدام الأمر غير صالح. إستخدم لمعلوماتك `معلومات` او الرد على رسالة مستخدم لمعلوماته.", threadID, messageID);
+      api.sendMessage("استخدام الأمر غير صالح. استخدم `معلومات` أو `معلومات @منشن`.", threadID, messageID);
     }
   },
 };
