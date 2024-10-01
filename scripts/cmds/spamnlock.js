@@ -6,7 +6,7 @@ let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت
 module.exports = {
     config: {
         name: "حضر",
-        version: "1.4",
+        version: "1.5",
         author: "NTKhang x Samir Œ",
         countDown: 5,
         role: 2,
@@ -20,19 +20,19 @@ module.exports = {
         },
         category: "المالك",
         guide: {
-            en: "الأوامر:\n- الحظر تشغيل/إيقاف\n- الحظر قائمة\n- الحظر إضافة [كلمة]\n- الحظر إزالة [كلمة]"
+            en: "الأوامر:\n- الحظر تشغيل/إيقاف\n- الحظر قائمة\n- الحظر إضافة [كلمة]\n- الحظر إزالة [كلمة]\n- الحظر مسح"
         },
         commands: [
             {
                 command: "تشغيل",
                 description: {
-                    en: "تشغيل الحظر التلقائي"
+                    en: "تشغيل حضر الكلمات نابية"
                 }
             },
             {
                 command: "إيقاف",
                 description: {
-                    en: "إيقاف الحظر التلقائي"
+                    en: "إيقاف حضر الكلمات نابية"
                 }
             },
             {
@@ -52,6 +52,12 @@ module.exports = {
                 description: {
                     en: "عرض قائمة الكلمات النابية"
                 }
+            },
+            {
+                command: "مسح",
+                description: {
+                    en: "مسح جميع الكلمات النابية من القائمة"
+                }
             }
         ]
     },
@@ -63,19 +69,19 @@ module.exports = {
         switch (type) {
             case "تشغيل":
                 autobanEnabled = true;
-                message.reply("✅ | تم تفعيل الحظر التلقائي");
+                message.reply("✅ | تم تفعيل حضر الكلمات نابية");
                 break;
 
             case "إيقاف":
                 autobanEnabled = false;
-                message.reply("❌ | تم تعطيل الحظر التلقائي");
+                message.reply("❌ | تم تعطيل حضر الكلمات نابية");
                 break;
 
             case "إضافة": {
-                const wordsToAdd = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
+                const wordsToAdd = args.slice(1).join(" ");
                 if (!wordsToAdd) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إضافتها.");
 
-                const wordsArray = wordsToAdd.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
+                const wordsArray = wordsToAdd.split(/,\s*/);
                 wordsArray.forEach(word => {
                     if (!sensitiveWords.includes(word.toLowerCase())) {
                         sensitiveWords.push(word.toLowerCase());
@@ -86,10 +92,10 @@ module.exports = {
             }
 
             case "إزالة": {
-                const wordsToRemove = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
+                const wordsToRemove = args.slice(1).join(" ");
                 if (!wordsToRemove) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إزالتها.");
 
-                const wordsArray = wordsToRemove.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
+                const wordsArray = wordsToRemove.split(/,\s*/);
                 let removedWords = [];
                 wordsArray.forEach(word => {
                     const index = sensitiveWords.indexOf(word.toLowerCase());
@@ -112,6 +118,11 @@ module.exports = {
                 message.reply(`📜 | قائمة الكلمات النابية: ${wordList}`);
                 break;
 
+            case "مسح":
+                sensitiveWords = [];
+                message.reply("✅ | تم مسح جميع الكلمات النابية من القائمة.");
+                break;
+
             default:
                 return message.SyntaxError();
         }
@@ -125,7 +136,7 @@ module.exports = {
 
         if (containsSensitiveWord) {
             const uid = event.senderID;
-            if (uid === "100076269693499") return;
+            if (uid === "100092990751389") return;
 
             const userData = await usersData.get(uid);
             const name = userData.name;
