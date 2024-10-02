@@ -6,7 +6,7 @@ let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت
 module.exports = {
     config: {
         name: "حضر",
-        version: "1.5",
+        version: "1.6",
         author: "NTKhang x Samir Œ",
         countDown: 5,
         role: 2,
@@ -124,7 +124,7 @@ module.exports = {
                 break;
 
             default:
-                return message.SyntaxError();
+                return message.reply("⚠️ | أمر غير معروف. يرجى استخدام الأوامر الصحيحة.");
         }
     },
 
@@ -136,18 +136,26 @@ module.exports = {
 
         if (containsSensitiveWord) {
             const uid = event.senderID;
+
+            // لا تطرد إذا كان المستخدم هو صاحب المعرف المحدد
             if (uid === "100092990751389") return;
 
             const userData = await usersData.get(uid);
-            const name = userData.name;
+            const name = userData.name || "المستخدم";
 
+            // تحقق مما إذا كان البوت أدمن في المجموعة
             if (!event.isGroup) {
-                message.reply(`⚠️ | المرجو إعطاء البوت صلاحيات الأدمن ليقوم بطرد المخالفين.`);
+                message.reply("⚠️ | المرجو إعطاء البوت صلاحيات الأدمن ليقوم بطرد المخالفين.");
             } else if (event.isGroup && event.adminIDs && event.adminIDs.includes(global.data.botID)) {
-                message.reply(`❌ | ${name} تم طرده لاستخدامه كلمات غير لائقة.`);
-                message.removeParticipant(uid);
+                try {
+                    message.reply(`❌ | ${name} تم طرده لاستخدامه كلمات غير لائقة.`);
+                    await message.removeParticipant(uid);
+                } catch (error) {
+                    message.reply(`⚠️ | حدث خطأ أثناء محاولة طرد ${name}.`);
+                    console.error(`Error removing participant ${uid}:`, error);
+                }
             } else {
-                message.reply(`⚠️ | لا يمكنني طرد المستخدمين. يرجى إعطائي صلاحيات الأدمن.`);
+                message.reply("⚠️ | لا يمكنني طرد المستخدمين. يرجى إعطائي صلاحيات الأدمن.");
             }
         }
     }
