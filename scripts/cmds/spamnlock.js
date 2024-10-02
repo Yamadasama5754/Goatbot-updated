@@ -1,34 +1,38 @@
-let autobanEnabled = true;  // تفعيل أو تعطيل خاصية الطرد التلقائي
-let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت خرا", "بوت غبي", "بوت حمار", "فاشل", "قود", "بوت كرنج"];  // الكلمات النابية الافتراضية
+const { getTime } = global.utils;
+
+let autobanEnabled = true;
+let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت خرا", "بوت غبي", "بوت حمار", "فاشل", "قود", "بوت كرنج"];
 
 module.exports = {
     config: {
-        name: "حضر",  // اسم الأمر
-        version: "1.1",
-        author: "Samir",
+        name: "الحظر",
+        version: "1.4",
+        author: "NTKhang x Samir Œ",
         countDown: 5,
         role: 2,
         shortDescription: {
-            en: "حظر تلقائي للمستخدمين",
+            vi: "Quản lý người dùng",
+            en: "إدارة المستخدمين"
         },
         longDescription: {
-            en: "أمر يقوم بطرد المستخدمين تلقائيًا إذا استخدموا كلمات نابية"
+            vi: "Quản lý người dùng trong hệ thống bot",
+            en: "أمر يمنع السب في الجروب أو الكروب"
         },
-        category: "إدارة",
+        category: "المالك",
         guide: {
-            en: "الأوامر:\n- الحظر تشغيل/إيقاف\n- الحظر قائمة\n- الحظر إضافة [كلمة]\n- الحظر إزالة [كلمة]\n- الحظر مسح"
+            en: "الأوامر:\n- الحظر تشغيل/إيقاف\n- الحظر قائمة\n- الحظر إضافة [كلمة]\n- الحظر إزالة [كلمة]"
         },
         commands: [
             {
                 command: "تشغيل",
                 description: {
-                    en: "تشغيل حضر الكلمات النابية"
+                    en: "تشغيل الحظر التلقائي"
                 }
             },
             {
                 command: "إيقاف",
                 description: {
-                    en: "إيقاف حضر الكلمات النابية"
+                    en: "إيقاف الحظر التلقائي"
                 }
             },
             {
@@ -48,45 +52,44 @@ module.exports = {
                 description: {
                     en: "عرض قائمة الكلمات النابية"
                 }
-            },
-            {
-                command: "مسح",
-                description: {
-                    en: "مسح جميع الكلمات النابية من القائمة"
-                }
             }
         ]
     },
 
-    onStart: async function ({ args, message, event }) {
-        const command = args[0];
-        switch (command) {
+    langs: {},
+
+    onStart: async function ({ args, message, event, prefix, getLang }) {
+        const type = args[0];
+        switch (type) {
             case "تشغيل":
                 autobanEnabled = true;
-                return message.reply("✅ | تم تفعيل حضر الكلمات النابية بنجاح.");
-            
+                message.reply("✅ | تم تفعيل الحظر التلقائي");
+                break;
+
             case "إيقاف":
                 autobanEnabled = false;
-                return message.reply("❌ | تم تعطيل حضر الكلمات النابية.");
-            
+                message.reply("❌ | تم تعطيل الحظر التلقائي");
+                break;
+
             case "إضافة": {
-                const wordsToAdd = args.slice(1).join(" ");
+                const wordsToAdd = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
                 if (!wordsToAdd) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إضافتها.");
 
-                const wordsArray = wordsToAdd.split(/,\s*/);
+                const wordsArray = wordsToAdd.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
                 wordsArray.forEach(word => {
                     if (!sensitiveWords.includes(word.toLowerCase())) {
                         sensitiveWords.push(word.toLowerCase());
                     }
                 });
-                return message.reply(`✅ | تم إضافة الكلمات: "${wordsArray.join(', ')}" إلى قائمة الكلمات النابية.`);
+                message.reply(`✅ | تم إضافة الكلمات: "${wordsArray.join(', ')}" إلى القائمة.`);
+                break;
             }
-            
+
             case "إزالة": {
-                const wordsToRemove = args.slice(1).join(" ");
+                const wordsToRemove = args.slice(1).join(" "); // استخدام join لدمج الكلمات في جملة واحدة
                 if (!wordsToRemove) return message.reply("⚠️ | يرجى تحديد الكلمات التي تريد إزالتها.");
 
-                const wordsArray = wordsToRemove.split(/,\s*/);
+                const wordsArray = wordsToRemove.split(/,\s*/); // تقسيم الكلمات باستخدام فاصلة
                 let removedWords = [];
                 wordsArray.forEach(word => {
                     const index = sensitiveWords.indexOf(word.toLowerCase());
@@ -97,58 +100,43 @@ module.exports = {
                 });
 
                 if (removedWords.length > 0) {
-                    return message.reply(`✅ | تم إزالة الكلمات: "${removedWords.join(', ')}" من القائمة.`);
+                    message.reply(`✅ | تم إزالة الكلمات: "${removedWords.join(', ')}" من القائمة.`);
                 } else {
-                    return message.reply(`❌ | لم يتم العثور على أي كلمات في القائمة.`);
+                    message.reply(`❌ | لم يتم العثور على أي كلمات في القائمة.`);
                 }
+                break;
             }
-            
+
             case "قائمة":
                 const wordList = sensitiveWords.length > 0 ? sensitiveWords.join(", ") : "لا توجد كلمات نابية مضافة.";
-                return message.reply(`📜 | قائمة الكلمات النابية: ${wordList}`);
-            
-            case "مسح":
-                sensitiveWords = [];
-                return message.reply("✅ | تم مسح جميع الكلمات النابية من القائمة.");
-            
+                message.reply(`📜 | قائمة الكلمات النابية: ${wordList}`);
+                break;
+
             default:
-                return message.reply("⚠️ | أمر غير معروف. يرجى استخدام الأوامر الصحيحة.");
+                return message.SyntaxError();
         }
     },
 
     onChat: async function ({ event, message, usersData }) {
-        if (!autobanEnabled) return;  // إذا كانت الخاصية معطلة، لا تفعل شيئًا
+        if (!autobanEnabled) return;
 
         const content = event.body.toLowerCase();
-
-        // استخدم Regular Expressions للتحقق من وجود كلمات نابية
-        const containsSensitiveWord = sensitiveWords.some(word => {
-            const wordPattern = new RegExp(`\\b${word}\\b`, 'i');  // البحث عن الكلمة بشكل دقيق
-            return wordPattern.test(content);
-        });
+        const containsSensitiveWord = sensitiveWords.some(word => content.includes(word));
 
         if (containsSensitiveWord) {
             const uid = event.senderID;
-
-            // تجاهل الطرد للمستخدمين المحددين (مثل مالك البوت)
-            if (uid === "100092990751389") return;
+            if (uid === "100076269693499") return;
 
             const userData = await usersData.get(uid);
-            const name = userData.name || "المستخدم";
+            const name = userData.name;
 
-            // تحقق مما إذا كان البوت أدمن في المجموعة
             if (!event.isGroup) {
-                return message.reply("⚠️ | المرجو إعطاء البوت صلاحيات الأدمن ليقوم بطرد المخالفين.");
-            } else if (event.isGroup && event.adminIDs && event.adminIDs.map(admin => admin.id).includes(global.data.botID)) {
-                try {
-                    message.reply(`❌ | ${name} تم طرده لاستخدامه كلمات غير لائقة.`);
-                    await message.removeParticipant(uid);  // طرد المستخدم
-                } catch (error) {
-                    message.reply(`⚠️ | حدث خطأ أثناء محاولة طرد ${name}.`);
-                    console.error(`Error removing participant ${uid}:`, error);
-                }
+                message.reply(`⚠️ | المرجو إعطاء البوت صلاحيات الأدمن ليقوم بطرد المخالفين.`);
+            } else if (event.isGroup && event.adminIDs && event.adminIDs.includes(global.data.botID)) {
+                message.reply(`❌ | ${name} تم طرده لاستخدامه كلمات غير لائقة.`);
+                message.removeParticipant(uid);
             } else {
-                return message.reply("⚠️ | لا يمكنني طرد المستخدمين. يرجى إعطائي صلاحيات الأدمن.");
+                message.reply(`⚠️ | لا يمكنني طرد المستخدمين. يرجى إعطائي صلاحيات الأدمن.`);
             }
         }
     }
