@@ -6,7 +6,7 @@ let sensitiveWords = ["شاذ", "زبي", "قحبة", "بوت فاشل", "بوت
 module.exports = {
     config: {
         name: "حضر",
-        version: "1.6",
+        version: "1.7",
         author: "NTKhang x Samir Œ",
         countDown: 5,
         role: 2,
@@ -132,13 +132,18 @@ module.exports = {
         if (!autobanEnabled) return;
 
         const content = event.body.toLowerCase();
-        const containsSensitiveWord = sensitiveWords.some(word => content.includes(word));
+
+        // تحسين التحقق باستخدام Regular Expressions
+        const containsSensitiveWord = sensitiveWords.some(word => {
+            const wordPattern = new RegExp(`\\b${word}\\b`, 'i'); // البحث عن الكلمة بشكل دقيق
+            return wordPattern.test(content);
+        });
 
         if (containsSensitiveWord) {
             const uid = event.senderID;
 
             // لا تطرد إذا كان المستخدم هو صاحب المعرف المحدد
-            if (uid === "100092990751389") return;
+            if (uid === "") return;
 
             const userData = await usersData.get(uid);
             const name = userData.name || "المستخدم";
