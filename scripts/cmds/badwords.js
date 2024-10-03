@@ -1,7 +1,7 @@
 module.exports = {
 	config: {
-		name: "كلمات_نابية",
-		aliases: ["bad"],
+		name: "badwords",
+		aliases: ["badword"],
 		version: "1.4",
 		author: "NTKhang",
 		countDown: 5,
@@ -90,7 +90,7 @@ module.exports = {
 		const badWords = await threadsData.get(event.threadID, "data.badWords.words", []);
 
 		switch (args[0]) {
-			case "اضافة": {
+			case "add": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin"));
 				const words = args.slice(1).join(" ").split(/[,|]/);
@@ -119,7 +119,7 @@ module.exports = {
 				);
 				break;
 			}
-			case "ازالة":
+			case "delete":
 			case "del":
 			case "-d": {
 				if (role < 1)
@@ -145,7 +145,7 @@ module.exports = {
 				);
 				break;
 			}
-			case "قائمة":
+			case "list":
 			case "all":
 			case "-a": {
 				if (badWords.length === 0)
@@ -153,14 +153,14 @@ module.exports = {
 				message.reply(getLang("badWordsList", args[1] === "hide" ? badWords.map(word => hideWord(word)).join(", ") : badWords.join(", ")));
 				break;
 			}
-			case "تشغيل": {
+			case "on": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin3", getLang("onText")));
 				await threadsData.set(event.threadID, true, "settings.badWords");
 				message.reply(getLang("turnedOnOrOff", getLang("onText")));
 				break;
 			}
-			case "ايقاف": {
+			case "off": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin3", getLang("offText")));
 				await threadsData.set(event.threadID, false, "settings.badWords");
