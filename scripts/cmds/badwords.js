@@ -1,6 +1,6 @@
 module.exports = {
 	config: {
-		name: "badwords",
+		name: "كلمات_نابية",
 		aliases: ["badword"],
 		version: "1.4",
 		author: "NTKhang",
@@ -18,10 +18,10 @@ module.exports = {
 				+ "\n   {pn} unwarn [<userID> | <@tag>]: xóa 1 lần cảnh báo của 1 thành viên"
 				+ "\n   {pn} on: tắt cảnh báo"
 				+ "\n   {pn} off: bật cảnh báo",
-			en: "   {pn} add <words>: add banned words (you can add multiple words separated by commas \",\" or vertical bars \"|\")"
-				+ "\n   {pn} delete <words>: delete banned words (you can delete multiple words separated by commas \",\" or vertical bars \"|\")"
-				+ "\n   {pn} list <hide | leave blank>: turn off warning (add \"hide\" to hide banned words)"
-				+ "\n   {pn} unwarn [<userID> | <@tag>]: remove 1 warning of 1 member"
+			en: "   {pn} اضافة <كلمات>: إضافة كلمات محظورة (يمكنك إضافة كلمات متعددة مفصولة بفواصل \",\" أو أشرطة عمودية \"|\")"
+				+ "\n   {pn} حذف <الكلمات>: ازالة الكلمات المحظورة (يمكنك حذف كلمات متعددة مفصولة بفواصل \",\" أو أشرطة عمودية \"|\")"
+				+ "\n   {pn} القائمة <إخفاء | اتركه فارغًا>: قم بإيقاف تشغيل التحذير (أضف \"إخفاء\" لإخفاء الكلمات المحظورة)"
+				+ "\n   {pn} unwarn [<userID> | <@tag>]: تحذير [<userID> | <@tag>]: ازالة تحذير واحد لعضو واحد"
 				+ "\n   {pn} on: turn off warning"
 				+ "\n   {pn} off: turn on warning"
 		}
@@ -54,29 +54,24 @@ module.exports = {
 			unwarned: "✅ | Đã xóa bỏ cảnh báo vi phạm từ cấm của người dùng %1 | %2"
 		},
 		en: {
-			onText: "on",
-			offText: "off",
-			onlyAdmin: "⚠️ | Only admins can add banned words to the list",
-			missingWords: "⚠️ | You haven't entered the banned words",
-			addedSuccess: "✅ | Added %1 banned words to the list",
-			alreadyExist: "❌ | %1 banned words already exist in the list before: %2",
-			tooShort: "⚠️ | %1 banned words cannot be added to the list because they are shorter than 2 characters: %2",
-			onlyAdmin2: "⚠️ | Only admins can delete banned words from the list",
-			missingWords2: "⚠️ | You haven't entered the words to delete",
-			deletedSuccess: "✅ | Deleted %1 banned words from the list",
-			notExist: "❌ | %1 banned words do not exist in the list before: %2",
-			emptyList: "⚠️ | The list of banned words in your group is currently empty",
-			badWordsList: "📑 | The list of banned words in your group: %1",
-			onlyAdmin3: "⚠️ | Only admins can %1 this feature",
-			turnedOnOrOff: "✅ | Banned words warning has been %1",
-			onlyAdmin4: "⚠️ | Only admins can delete banned words warning",
-			missingTarget: "⚠️ | You haven't entered user ID or tagged user",
-			notWarned: "⚠️ | User %1 has not been warned for banned words",
-			removedWarn: "✅ | User %1 | %2 has been removed 1 banned words warning",
-			warned: "⚠️ | Banned words \"%1\" have been detected in your message, if you continue to violate you will be kicked from the group.",
-			warned2: "⚠️ | Banned words \"%1\" have been detected in your message, you have violated 2 times and will be kicked from the group.",
-			needAdmin: "Bot needs admin privileges to kick banned members",
-			unwarned: "✅ | Removed banned words warning of user %1 | %2"
+			onText: "تشغيل",
+			offText: "ايقاف",
+			missingWords: "⚠️ | لم تقم بإدخال الكلمات الممنوعة",
+addedSuccess: "✅ | تم إضافة %1 كلمات ممنوعة إلى القائمة",
+alreadyExist: "❌ | %1 كلمات ممنوعة موجودة بالفعل في القائمة: %2",
+tooShort: "⚠️ | لا يمكن إضافة %1 كلمات ممنوعة إلى القائمة لأنها أقصر من حرفين: %2",
+onlyAdmin2: "⚠️ | فقط المسؤولون يمكنهم حذف الكلمات الممنوعة من القائمة",
+missingWords2: "⚠️ | لم تقم بإدخال الكلمات لحذفها",
+deletedSuccess: "✅ | تم حذف %1 كلمات ممنوعة من القائمة",
+notExist: "❌ | %1 كلمات ممنوعة غير موجودة في القائمة: %2",
+emptyList: "⚠️ | قائمة الكلمات الممنوعة في مجموعتك فارغة حاليًا",
+badWordsList: "📑 | قائمة الكلمات الممنوعة في مجموعتك: %1",
+onlyAdmin3: "⚠️ | فقط المسؤولون يمكنهم %1 هذه الميزة",
+turnedOnOrOff: "✅ | تم %1 تحذير الكلمات الممنوعة",
+onlyAdmin4: "⚠️ | فقط المسؤولون يمكنهم حذف تحذير الكلمات الممنوعة",
+missingTarget: "⚠️ | لم تقم بإدخال معرف المستخدم أو تمييز المستخدم",
+notWarned: "⚠️ | المستخدم %1 لم يتم تحذيره بسبب الكلمات الممنوعة",
+removedWarn: "✅ | تم إزالة تحذير واحد للكلمات الممنوعة من المستخدم %1 | %2" 
 		}
 	},
 
@@ -119,9 +114,9 @@ module.exports = {
 				);
 				break;
 			}
-			case "delete":
-			case "del":
-			case "-d": {
+			case "ازالة":
+			case "إزالة":
+			case "delete": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin2"));
 				const words = args.slice(1).join(" ").split(/[,|]/);
@@ -145,29 +140,29 @@ module.exports = {
 				);
 				break;
 			}
-			case "list":
-			case "all":
-			case "-a": {
+			case "القائمة":
+			case "قائمة":
+			case "all": {
 				if (badWords.length === 0)
 					return message.reply(getLang("emptyList"));
 				message.reply(getLang("badWordsList", args[1] === "hide" ? badWords.map(word => hideWord(word)).join(", ") : badWords.join(", ")));
 				break;
 			}
-			case "on": {
+			case "تشغيل": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin3", getLang("onText")));
 				await threadsData.set(event.threadID, true, "settings.badWords");
 				message.reply(getLang("turnedOnOrOff", getLang("onText")));
 				break;
 			}
-			case "off": {
+			case "ايقاف": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin3", getLang("offText")));
 				await threadsData.set(event.threadID, false, "settings.badWords");
 				message.reply(getLang("turnedOnOrOff", getLang("offText")));
 				break;
 			}
-			case "unwarn": {
+			case "الغاء": {
 				if (role < 1)
 					return message.reply(getLang("onlyAdmin4"));
 				let userID;
