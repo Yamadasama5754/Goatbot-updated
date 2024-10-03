@@ -33,7 +33,7 @@ module.exports = {
 		role: 2,
 		description: {
 			vi: "Quản lý các tệp lệnh của bạn",
-			en: "Manage your command files"
+			en: "إدارة ملفات الأوامر الخاصة بي"
 		},
 		category: "owner",
 		guide: {
@@ -41,10 +41,10 @@ module.exports = {
 				+ "\n   {pn} loadAll"
 				+ "\n   {pn} install <url> <tên file lệnh>: Tải xuống và cài đặt một tệp lệnh từ một url, url là đường dẫn đến tệp lệnh (raw)"
 				+ "\n   {pn} install <tên file lệnh> <code>: Tải xuống và cài đặt một tệp lệnh từ một code, code là mã của lệnh",
-			en: "   {pn} load <command file name>"
+		en: "   {pn} load <اسم ملف الأمر>"
 				+ "\n   {pn} loadAll"
-				+ "\n   {pn} install <url> <command file name>: Download and install a command file from a url, url is the path to the file (raw)"
-				+ "\n   {pn} install <command file name> <code>: Download and install a command file from a code, code is the code of the command"
+				+ "\n   {pn} install <url> <اسم ملف الأمر>: قم بتنزيل ملف الأوامر وتثبيته من عنوان url، عنوان url هو المسار إلى الملف (raw)"
+				+ "\n   {pn} install <إسم ملف الامر> <الكود>: قم بتنزيل وتثبيت ملف الأمر من الكود، الكود هو كود الأمر"
 		}
 	},
 
@@ -69,29 +69,30 @@ module.exports = {
 			installedError: "❌ | Cài đặt command \"%1\" thất bại với lỗi\n%2: %3",
 			missingFile: "⚠️ | Không tìm thấy tệp lệnh \"%1\"",
 			invalidFileName: "⚠️ | Tên tệp lệnh không hợp lệ",
-			unloadedFile: "✅ | Đã unload lệnh \"%1\""
+			unloadedFile: "✅ | Đã unload lệnh \"%1\"
 		},
 		en: {
-			missingFileName: "⚠️ | Please enter the command name you want to reload",
-			loaded: "✅ | Loaded command \"%1\" successfully",
-			loadedError: "❌ | Failed to load command \"%1\" with error\n%2: %3",
-			loadedSuccess: "✅ | Loaded successfully (%1) command",
-			loadedFail: "❌ | Failed to load (%1) command\n%2",
-			openConsoleToSeeError: "👀 | Open console to see error details",
-			missingCommandNameUnload: "⚠️ | Please enter the command name you want to unload",
-			unloaded: "✅ | Unloaded command \"%1\" successfully",
-			unloadedError: "❌ | Failed to unload command \"%1\" with error\n%2: %3",
-			missingUrlCodeOrFileName: "⚠️ | Please enter the url or code and command file name you want to install",
-			missingUrlOrCode: "⚠️ | Please enter the url or code of the command file you want to install",
-			missingFileNameInstall: "⚠️ | Please enter the file name to save the command (with .js extension)",
-			invalidUrl: "⚠️ | Please enter a valid url",
-			invalidUrlOrCode: "⚠️ | Unable to get command code",
-			alreadExist: "⚠️ | The command file already exists, are you sure you want to overwrite the old command file?\nReact to this message to continue",
-			installed: "✅ | Installed command \"%1\" successfully, the command file is saved at %2",
-			installedError: "❌ | Failed to install command \"%1\" with error\n%2: %3",
-			missingFile: "⚠️ | Command file \"%1\" not found",
-			invalidFileName: "⚠️ | Invalid command file name",
-			unloadedFile: "✅ | Unloaded command \"%1\""
+			
+missingFileName: "⚠️ | يرجى إدخال اسم الأمر الذي تريد إعادة تحميله",
+loaded: "✅ | تم تحميل الأمر"%1" بنجاح",
+loadedError: "❌ | فشل في تحميل الأمر "%1" مع الخطأ\n%2: %3",
+loadedSuccess: "✅ | تم تحميل الأمر بنجاح (%1)",
+loadedFail: "❌ | فشل في تحميل الأمر (%1)\n%2",
+openConsoleToSeeError: "👀 | افتح الكونسول لمشاهدة تفاصيل الخطأ",
+missingCommandNameUnload: "⚠️ | يرجى إدخال اسم الأمر الذي تريد إلغاء تحميله",
+unloaded: "✅ | تم إلغاء تحميل الأمر "%1" بنجاح",
+unloadedError: "❌ | فشل في إلغاء تحميل الأمر "%1" مع الخطأ\n%2: %3",
+missingUrlCodeOrFileName: "⚠️ | يرجى إدخال الرابط أو الكود واسم ملف الأمر الذي تريد تثبيته",
+missingUrlOrCode: "⚠️ | يرجى إدخال الرابط أو كود ملف الأمر الذي تريد تثبيته",
+missingFileNameInstall: "⚠️ | يرجى إدخال اسم الملف لحفظ الأمر (بامتداد .js)",
+invalidUrl: "⚠️ | يرجى إدخال رابط صالح",
+invalidUrlOrCode: "⚠️ | تعذر الحصول على كود الأمر",
+alreadExist: "⚠️ | ملف الأمر موجود بالفعل، هل أنت متأكد من أنك تريد الكتابة فوق الملف القديم؟\nتفاعل مع هذه الرسالة للمتابعة",
+installed: "✅ | تم تثبيت الأمر "%1" بنجاح، الملف محفوظ في %2",
+installedError: "❌ | فشل في تثبيت الأمر "%1" مع الخطأ\n%2: %3",
+missingFile: "⚠️ | لم يتم العثور على ملف الأمر "%1"",
+invalidFileName: "⚠️ | اسم ملف الأمر غير صالح",
+unloadedFile: "✅ | تم إلغاء تحميل الأمر "%1" بنجاح"
 		}
 	},
 
