@@ -41,10 +41,10 @@ module.exports = {
 				+ "\n   {pn} loadAll"
 				+ "\n   {pn} install <url> <tên file lệnh>: Tải xuống và cài đặt một tệp lệnh từ một url, url là đường dẫn đến tệp lệnh (raw)"
 				+ "\n   {pn} install <tên file lệnh> <code>: Tải xuống và cài đặt một tệp lệnh từ một code, code là mã của lệnh",
-			en: "   {pn} load <command file name>"
+			en: "   {pn} load <اسم ملف الامر>"
 				+ "\n   {pn} loadAll"
-				+ "\n   {pn} install <url> <command file name>: Download and install a command file from a url, url is the path to the file (raw)"
-				+ "\n   {pn} install <command file name> <code>: Download and install a command file from a code, code is the code of the command"
+				+ "\n   {pn} install <url> <اسم ملف الامر>: قم بتنزيل ملف الأوامر وتثبيته من عنوان url، عنوان url هو المسار إلى الملف  (raw)"
+				+ "\n   {pn} install <اسم ملف الامر> <الكود>: قم بتنزيل وتثبيت ملف الأمر من الكود، الكود هو كود الأمر"
 		}
 	},
 
@@ -72,26 +72,26 @@ module.exports = {
 			unloadedFile: "✅ | Đã unload lệnh \"%1\""
 		},
 		en: {
-			missingFileName: "⚠️ | Please enter the command name you want to reload",
-			loaded: "✅ | Loaded command \"%1\" successfully",
-			loadedError: "❌ | Failed to load command \"%1\" with error\n%2: %3",
-			loadedSuccess: "✅ | Loaded successfully (%1) command",
-			loadedFail: "❌ | Failed to load (%1) command\n%2",
-			openConsoleToSeeError: "👀 | Open console to see error details",
-			missingCommandNameUnload: "⚠️ | Please enter the command name you want to unload",
-			unloaded: "✅ | Unloaded command \"%1\" successfully",
-			unloadedError: "❌ | Failed to unload command \"%1\" with error\n%2: %3",
-			missingUrlCodeOrFileName: "⚠️ | Please enter the url or code and command file name you want to install",
-			missingUrlOrCode: "⚠️ | Please enter the url or code of the command file you want to install",
-			missingFileNameInstall: "⚠️ | Please enter the file name to save the command (with .js extension)",
-			invalidUrl: "⚠️ | Please enter a valid url",
-			invalidUrlOrCode: "⚠️ | Unable to get command code",
-			alreadExist: "⚠️ | The command file already exists, are you sure you want to overwrite the old command file?\nReact to this message to continue",
-			installed: "✅ | Installed command \"%1\" successfully, the command file is saved at %2",
-			installedError: "❌ | Failed to install command \"%1\" with error\n%2: %3",
-			missingFile: "⚠️ | Command file \"%1\" not found",
-			invalidFileName: "⚠️ | Invalid command file name",
-			unloadedFile: "✅ | Unloaded command \"%1\""
+			missingFileName: "⚠️ | الرجاء إدخال اسم الأمر الذي تريد إعادة تحميله",
+			loaded: "✅ | أمر محمل \"%1\" بنجاح",
+			loadedError: "❌ | فشل تحميل الأمر \"%1\" مع الخطأ\n%2: %3",
+			loadedSuccess: "✅ | تم التحميل بنجاح (%1) الامر",
+			loadedFail: "❌ | فشل التحميل (%1) الامر\n%2",
+			openConsoleToSeeError: "👀 | افتح وحدة التحكم لرؤية تفاصيل الخطأ",
+			missingCommandNameUnload: "⚠️ | الرجاء إدخال اسم الأمر الذي تريد إلغاء تحميله",
+			unloaded: "✅ | أمر تم تفريغه \"%1\" بنجاح",
+			unloadedError: "❌ | فشل في إلغاء تحميل الأمر \"%1\" مع الخطأ\n%2: %3",
+			missingUrlCodeOrFileName: "⚠️ | الرجاء إدخال عنوان URL أو الرمز واسم ملف الأمر الذي تريد تثبيته",
+			missingUrlOrCode: "⚠️ | الرجاء إدخال عنوان URL أو رمز ملف الأوامر الذي تريد تثبيته",
+			missingFileNameInstall: "⚠️ | الرجاء إدخال اسم الملف لحفظ الأمر (بامتداد .js)",
+			invalidUrl: "⚠️ | الرجاء إدخال عنوان URL صالح",
+			invalidUrlOrCode: "⚠️ | غير قادر على الحصول على رمز الأمر",
+			alreadExist: "⚠️ | ملف الأوامر موجود بالفعل، هل أنت متأكد من أنك تريد الكتابة فوق ملف الأوامر القديم?\nقم بالرد على هذه الرسالة للمتابعة",
+			installed: "✅ | الأمر المثبث \"%1\" بنجاح، يتم حفظ ملف الأوامر في %2",
+			installedError: "❌ | فشل في تثبيت الأمر \"%1\" مع الخطأ\n%2: %3",
+			missingFile: "⚠️ | ملف الأوامر \"%1\" لم يتم العثور عليه",
+			invalidFileName: "⚠️ | اسم ملف الأمر غير صالح",
+			unloadedFile: "✅ | تم تفريغ الامر \"%1\""
 		}
 	},
 
