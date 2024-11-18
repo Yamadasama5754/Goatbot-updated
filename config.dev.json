@@ -1,6 +1,6 @@
 {
 	"facebookAccount": {
-		"email": "rounabot007@gmail.com",
+		"email": "rouna2299@gmail.com",
 		"password": "ahmad rouna",
 		"2FASecret": "",
 		"i_user": "",
@@ -12,7 +12,7 @@
 	"antiInbox": false,
 	"language": "en",
 	"notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
-	"nickNameBot": "ཬྀᎦ﹅ᎯᏦᎯᏕᎻᎨ ぐ ꜝ㷭ཬྀ",
+	"nickNameBot": "Rem",
 	"prefix": ".",
 	"adminOnly": {
 		"enable": false,
